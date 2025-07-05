@@ -3,6 +3,8 @@ from flask_cors import CORS
 from db.connection import init_db
 from dotenv import load_dotenv
 load_dotenv()
+import os
+print("LOADED DB URL:", os.getenv("DATABASE_URL"))
 
 
 app = Flask(__name__)

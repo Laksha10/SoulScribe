@@ -1,22 +1,22 @@
 import streamlit as st
 import requests
-import psycopg2
-from urllib.parse import urlparse
-from datetime import datetime
-import os
-from dotenv import load_dotenv
+# import psycopg2
+# from urllib.parse import urlparse
+# from datetime import datetime
+# import os
+# from dotenv import load_dotenv
 
 # --- Load Environment Variables ---
-load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
+# load_dotenv()
+# DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Parse connection info
-parsed_url = urlparse(DATABASE_URL)
-DB_USER = parsed_url.username
-DB_PASSWORD = parsed_url.password
-DB_HOST = parsed_url.hostname
-DB_PORT = parsed_url.port
-DB_NAME = parsed_url.path[1:]
+# parsed_url = urlparse(DATABASE_URL)
+# DB_USER = parsed_url.username
+# DB_PASSWORD = parsed_url.password
+# DB_HOST = parsed_url.hostname
+# DB_PORT = parsed_url.port
+# DB_NAME = parsed_url.path[1:]
 
 # --- Streamlit Page Setup ---
 st.set_page_config(page_title="SoulScribe", page_icon="🕊️", layout="centered")
@@ -65,7 +65,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 # --- Header ---
 st.markdown("<h1 style='text-align: center;'>🕊️ SoulScribe</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color:#374151;'>Your Emotional Companion – Write your heart out.</p>", unsafe_allow_html=True)
@@ -93,30 +92,6 @@ if st.button("Reflect with Me"):
                     st.markdown(f"<div class='message'>{result['message']}</div>", unsafe_allow_html=True)
 
                     st.markdown("</div>", unsafe_allow_html=True)
-
-                    try:
-                        conn = psycopg2.connect(
-                            host=DB_HOST,
-                            database=DB_NAME,
-                            user=DB_USER,
-                            password=DB_PASSWORD,
-                            port=DB_PORT
-                        )
-                        cursor = conn.cursor()
-                        insert_query = """
-                            INSERT INTO journal_entries (text, predicted_emotions, timestamp)
-                            VALUES (%s, %s, %s)
-                        """
-                        cursor.execute(insert_query, (
-                            user_input,
-                            ", ".join(result['emotions']),
-                            datetime.now()
-                        ))
-                        conn.commit()
-                        cursor.close()
-                        conn.close()
-                    except Exception as db_error:
-                        st.markdown(f"<div class='error'>Couldn't save your journal to the cloud:<br>{db_error}</div>", unsafe_allow_html=True)
 
             except Exception as e:
                 st.markdown(f"<div class='error'>An error occurred:<br>{e}</div>", unsafe_allow_html=True)
